@@ -34,12 +34,39 @@
     const oImageFile = document.querySelector('#imageFile');
     const oImage = new Image();
 
+    const MASK_OPACITY = 0.5;
+    let initPos = [];
+
     const init = () => {
         bindEvent();
     }
 
     function bindEvent() {
         oImageFile.addEventListener('change', handleFileChange, false);
+        oCan.addEventListener('mousedown', handleCanvasMouseDown, false);
+    }
+
+    function handleCanvasMouseDown(e) {
+        initPos = [e.offsetX, e.offsetY];
+        oCan.addEventListener('mousemove', handleCanvasMouseMove, false);
+        oCan.addEventListener('mouseup', handleCanvasMouseUp, false);
+    }
+
+    function handleCanvasMouseMove(e) {
+        const endX = e.offsetX;
+        const endY = e.offsetY;
+        const [startX, startY] = initPos;
+        const rectWidth = endX - startX;
+        const rectHeight = endY - startY;
+        const { width, height } = oCan;
+        ctx.clearRect(0, 0, width, height);
+        drawImageMask(0, 0, width, height, MASK_OPACITY);
+        drawScreenShot(width, height, rectWidth, rectHeight);
+    }
+
+    function handleCanvasMouseUp() {
+        oCan.removeEventListener('mousemove', handleCanvasMouseMove, false);
+        oCan.removeEventListener('mouseup', handleCanvasMouseUp, false);
     }
 
     function handleFileChange(e) {
@@ -56,7 +83,7 @@
                 generateCanvas(oContainer, oCan, width, height);
                 // 2.绘制图片
                 ctx.drawImage(oImage, 0, 0, width, height);
-                drawImageMask(0, 0, width, height, 0.5);
+                drawImageMask(0, 0, width, height, MASK_OPACITY);
             }
         }
     }
@@ -74,6 +101,16 @@
     function drawImageMask(x, y, width, height, opacity) {
         ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
         ctx.fillRect(x, y, width, height);
+    }
+
+    // 4.截图
+    function drawScreenShot(canWidth, canHeight, rectWidth, rectHeight) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = '#000';
+        ctx.fillRect(...initPos, rectWidth, rectHeight);
+
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.drawImage(oImage, 0, 0, canWidth, canHeight, 0, 0, canWidth, canHeight);
     }
 
     init();             
