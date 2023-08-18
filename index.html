@@ -10,7 +10,8 @@
             padding: 0;
         }
 
-        .canvas-container {
+        .canvas-container,
+        .canvas2-container {
             display: none;
             border: 1px solid #ddd;
         }
@@ -24,6 +25,9 @@
     <div class="canvas-container">
         <canvas id="can"></canvas>
     </div>
+    <div class="canvas2-container">
+        <canvas id="can2"></canvas>
+    </div>
 </body>
 
 <script>
@@ -36,6 +40,11 @@
 
     const MASK_OPACITY = 0.5;
     let initPos = [];
+    let screenData = [];
+
+    const oContainer2 = document.querySelector('.canvas2-container');
+    const oCan2 = document.querySelector('#can2');
+    const ctx2 = oCan2.getContext('2d');
 
     const init = () => {
         bindEvent();
@@ -58,6 +67,8 @@
         const [startX, startY] = initPos;
         const rectWidth = endX - startX;
         const rectHeight = endY - startY;
+        screenData = [startX, startY, rectWidth, rectHeight];
+
         const { width, height } = oCan;
         ctx.clearRect(0, 0, width, height);
         drawImageMask(0, 0, width, height, MASK_OPACITY);
@@ -67,6 +78,7 @@
     function handleCanvasMouseUp() {
         oCan.removeEventListener('mousemove', handleCanvasMouseMove, false);
         oCan.removeEventListener('mouseup', handleCanvasMouseUp, false);
+        drawScreenShotImage(screenData);
     }
 
     function handleFileChange(e) {
@@ -111,6 +123,15 @@
 
         ctx.globalCompositeOperation = 'destination-over';
         ctx.drawImage(oImage, 0, 0, canWidth, canHeight, 0, 0, canWidth, canHeight);
+    }
+
+    // 5.获取当前图片截图后的数据放入另一个canvas
+    function drawScreenShotImage(screenData) {
+        const data = ctx.getImageData(...screenData);
+        generateCanvas(oContainer2, oCan2, screenData[2], screenData[3]);
+        ctx2.clearRect(...screenData);
+        console.log(data);
+        ctx2.putImageData(data, 0, 0);
     }
 
     init();             
