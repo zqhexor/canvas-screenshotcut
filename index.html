@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas截图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .canvas-container {
+            display: none;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <input type="file" id="imageFile" accept="image/*">
+    </div>
+    <div class="canvas-container">
+        <canvas id="can"></canvas>
+    </div>
+</body>
+
+<script>
+    const oCantainer = document.querySelector('.canvas-container');
+    const oCan = document.querySelector('#can');
+    const ctx = oCan.getContext('2d');
+
+    const oImageFile = document.querySelector('#imageFile');
+
+    const init = () => {
+        bindEvent()
+    }
+
+    function bindEvent() {
+        oImageFile.addEventListener('change', 'handleFileChange', false)
+    }
+
+    function handleFileChange(e) {
+        console.log(e)
+    }
+</script>
+</html>

@@ -1,2 +1,8 @@
-# canvas-screenshotcut
-canvas截图
+# canvas截图
+0. 读取图片（input file）
+1. canvas画布（自适应,图片的大小即画布的大小）
+2. 绘制图片（drawImage）
+3. 蒙层（黑色半透明的层）
+4. 截图的矩形（在蒙层上方鼠标移动的范围内进行图片的再绘制）
+5. 获取当前图片截图后的数据
+6. 放入另一个canvas
