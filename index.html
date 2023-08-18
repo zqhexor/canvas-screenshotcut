@@ -27,7 +27,7 @@
 </body>
 
 <script>
-    const oCantainer = document.querySelector('.canvas-container');
+    const oContainer = document.querySelector('.canvas-container');
     const oCan = document.querySelector('#can');
     const ctx = oCan.getContext('2d');
 
@@ -45,6 +45,7 @@
     function handleFileChange(e) {
         const file = e.target.files[0];
         
+        // 0.读取图片
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function(e) {
@@ -52,20 +53,29 @@
             oImage.src = data;
             oImage.onload = function(e) {
                 const { width, height } = this;
-                generateCanvas(oCantainer, oCan, width, height);
+                generateCanvas(oContainer, oCan, width, height);
+                // 2.绘制图片
                 ctx.drawImage(oImage, 0, 0, width, height);
+                drawImageMask(0, 0, width, height, 0.5);
             }
         }
     }
 
-    function generateCanvas(cantainer, canvas, width, height) {
-        cantainer.style.width = `${width}px`;
-        cantainer.style.height = `${height}px`;
+    // 1.生成自适应画布
+    function generateCanvas(container, canvas, width, height) {
+        container.style.width = `${width}px`;
+        container.style.height = `${height}px`;
         canvas.width = width;
         canvas.height = height;
-        cantainer.style.display = 'block';
+        container.style.display = 'block';
     }
 
-    init();                
+    // 3.绘制蒙层
+    function drawImageMask(x, y, width, height, opacity) {
+        ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+        ctx.fillRect(x, y, width, height);
+    }
+
+    init();             
 </script>
 </html>
