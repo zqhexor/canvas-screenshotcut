@@ -32,17 +32,40 @@
     const ctx = oCan.getContext('2d');
 
     const oImageFile = document.querySelector('#imageFile');
+    const oImage = new Image();
 
     const init = () => {
-        bindEvent()
+        bindEvent();
     }
 
     function bindEvent() {
-        oImageFile.addEventListener('change', 'handleFileChange', false)
+        oImageFile.addEventListener('change', handleFileChange, false);
     }
 
     function handleFileChange(e) {
-        console.log(e)
+        const file = e.target.files[0];
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+            const data = e.target.result;
+            oImage.src = data;
+            oImage.onload = function(e) {
+                const { width, height } = this;
+                generateCanvas(oCantainer, oCan, width, height);
+                ctx.drawImage(oImage, 0, 0, width, height);
+            }
+        }
     }
+
+    function generateCanvas(cantainer, canvas, width, height) {
+        cantainer.style.width = `${width}px`;
+        cantainer.style.height = `${height}px`;
+        canvas.width = width;
+        canvas.height = height;
+        cantainer.style.display = 'block';
+    }
+
+    init();                
 </script>
 </html>
