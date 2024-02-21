@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>笑脸</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="can" width="400" height="400"></canvas>
+</body>
+
+<script>
+  const oCan = document.querySelector('#can');
+  const ctx = oCan.getContext('2d');
+
+  // 1.绘制脸
+  ctx.arc(200, 200, 100, 0, Math.PI * 2, false);
+
+  // 2.绘制嘴巴
+  ctx.moveTo(270, 200);
+  ctx.arc(200, 200, 70, 0, Math.PI, false);
+
+  // 3.绘制左眼
+  ctx.moveTo(180, 170);
+  ctx.arc(170, 170, 10, 0, Math.PI * 2, false);
+  
+  // 4.绘制右眼
+  ctx.moveTo(240, 170);
+  ctx.arc(230, 170, 10, 0, Math.PI * 2, false);
+
+  ctx.stroke(); 
+</script>
+</html>
